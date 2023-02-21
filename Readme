@@ -1,0 +1,302 @@
+สร้างไลน์บอต แจ้งซ่อม
+สร้างชีตฐานข้อมูล (ทำสำเนา)
+https://docs.google.com/spreadsheets/d/1eAmX2Ba2xkYGqtVWdaVAXTQRDGsmj61N6L7NNYb3kLI/copy
+Deploy web app เอา url ไปใส่ใน webhook ของบอต แล้ว Verify ได้ Success
+สร้างไลน์ Login
+
+สร้าง LIFF 
+- Endpoint URL ได้มาจาก ลิ้งค์ฟอร์มแจ้งซ่อม (https://replit.com/)
+-Scopes  กำหนดค่าดังนี้  chat_message.write,  openid
+           - Bot link feature กำหนดเป็น Off
+          -Module mode เปิด
+
+ใช้ Postman สร้างริชเมนู
+-https://www.postman.com/
+-สร้าง Workspace แล้วทำการ import ลิ้งค์ของ CLASS LINE API ด้านล่างนี้
+https://raw.githubusercontent.com/thepnatee/class_line_messaging_api/main/CLASS_LINE_API_Example.postman_collection.json
+
+-คัดลอกโค้ด JSON ไปวาง
+*********************************
+{
+  "size": {
+    "width": 2500,
+    "height": 1686
+  },
+  "selected": true,
+  "name": "Rich Menu 1",
+  "chatBarText": "menu",
+  "areas": [
+    {
+      "bounds": {
+        "x": 25,
+        "y": 861,
+        "width": 777,
+        "height": 807
+      },
+      "action": {
+        "type": "message",
+        "text": "เช็คสถานะ"
+      }
+    },
+    {
+      "bounds": {
+        "x": 853,
+        "y": 866,
+        "width": 790,
+        "height": 798
+      },
+      "action": {
+        "type": "message",
+        "text": "ภาระงานค้าง"
+      }
+    },
+    {
+      "bounds": {
+        "x": 1693,
+        "y": 870,
+        "width": 782,
+        "height": 802
+      },
+      "action": {
+        "type": "message",
+        "text": "รายงาน"
+      }
+    },
+    {
+      "bounds": {
+        "x": 55,
+        "y": 30,
+        "width": 2386,
+        "height": 781
+      },
+      "action": {
+        "type": "uri",
+        "uri": "ใส่ URL ของ LIFF"
+      }
+    }
+  ]
+}
+********************************
+
+ไปที่เว็บ https://replit.com/
+
+//คัดลอกโค้ดสร้างฟอร์มแจ้งซ่อม
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบแจ้งซ่อม</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
+        integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: Kanit, sans-serif;
+            background-color: #5D3891;
+        }
+
+        label {
+            color: white;
+        }
+
+        .container {
+            max-width: 600px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form id="myForm" class="needs-validation my-4" novalidate>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="h2 text-light">ระบบแจ้งซ่อม</p>
+                </div>
+            </div>
+            <div class="row justify-content-start g-3">
+                <div class="col-12">
+                    <label for="name">ชื่อ-สกุล</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                    <div class="invalid-feedback">
+                        กรุณากรอกชื่อ-สกุล
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label for="phone">เบอร์โทร</label>
+                    <input type="text" id="phone" name="phone" class="form-control" required>
+                    <div class="invalid-feedback">
+                        กรุณากรอกเบอร์โทร
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label for="device">อุปกรณ์ที่มีปัญหา</label>
+                    <input type="text" id="device" name="device" class="form-control" required>
+                    <div class="invalid-feedback">
+                        กรุณากรอกอุปกรณ์ที่มีปัญหา
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label for="problem">อาการที่พบ</label>
+                    <input type="text" id="problem" name="problem" class="form-control" required>
+                    <div class="invalid-feedback">
+                        กรุณากรอกอาการที่พบ
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label for="place">สถานที่</label>
+                    <input type="text" id="place" name="place" class="form-control" required>
+                    <div class="invalid-feedback">
+                        กรุณากรอกสถานที่
+                    </div>
+                </div>
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-warning w-100"><i
+                            class="bi bi-send-fill"></i>&nbsp;แจ้งซ่อม</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        const scriptUrl = 'ใส่ url ของเว็บแอป'
+        var uid
+        $(document).ready(() => {
+            liff.init({
+                liffId: 'ใส่ LIFF ID',
+                withLoginOnExternalBrowser: true
+            })
+            liff.ready.then(() => {
+                console.log('liff ready')
+            })
+        })
+
+        function submit() {
+            $.LoadingOverlay('show')
+            let data = {
+                opt: 'savedata',
+                uid: liff.getDecodedIDToken().sub,
+                name: $('#name').val(),
+                phone: $('#phone').val(),
+                device: $('#device').val(),
+                problem: $('#problem').val(),
+                place: $('#place').val(),
+            }
+            $.ajax({
+                method: "POST",
+                url: scriptUrl,
+                data: data,
+                dataType: 'json',
+                success: function (res) {
+                    $.LoadingOverlay('hide')
+                    if (res.status == 'success') {
+                        return Swal.fire({
+                            icon: 'success',
+                            title: 'แจ้งซ่อมเรียบร้อย',
+                            allowOutsideClick: false,
+                            confirmButtonText: 'ตกลง'
+                        }).then(() => {
+                            let flex = {
+                                type: 'flex',
+                                altText: 'success',
+                                contents: {
+                                    "type": "bubble",
+                                    "body": {
+                                        "type": "box",
+                                        "layout": "vertical",
+                                        "contents": [
+                                            {
+                                                "type": "text",
+                                                "text": "✅✅แจ้งซ่อมเรียบร้อย✅✅",
+                                                "weight": "bold",
+                                                "size": "xl",
+                                                "adjustMode": "shrink-to-fit",
+                                                "align": "center"
+                                            },
+                                            {
+                                                "type": "separator"
+                                            },
+                                            {
+                                                "type": "text",
+                                                "text": "รหัสงานซ่อม : " + res.id
+                                            },
+                                            {
+                                                "type": "text",
+                                                "text": "ชื่ออุปกรณ์ : " + data.device,
+                                                "wrap": true
+                                            },
+                                            {
+                                                "type": "text",
+                                                "text": "อาการที่พบ : " + data.problem,
+                                                "wrap": true
+                                            }
+                                        ],
+                                        "spacing": "md"
+                                    }
+                                }
+                            }
+                            liff.sendMessages([flex]).then(() => {
+                                console.log("message sent");
+                                liff.closeWindow()
+                            })
+                        })
+                    }
+                    return Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        allowOutsideClick: false,
+                        confirmButtonText: 'ตกลง'
+                    })
+                },
+                error: function (err) {
+                    console.log(err)
+                    $.LoadingOverlay('hide')
+                    alert('บันทึกข้อมูลไม่สำเร็จ')
+                }
+            });
+        }
+
+    </script>
+    <script>
+        (() => {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    event.preventDefault()
+                    if (!form.checkValidity()) {
+                        event.stopPropagation()
+                        form.classList.add('was-validated')
+                        $('#myForm').find(":invalid").first().focus();
+                    } else {
+                        submit()
+                    }
+
+                }, false)
+            })
+        })()
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+</body>
+
+</html>
+
